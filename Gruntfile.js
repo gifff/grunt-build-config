@@ -21,8 +21,8 @@ module.exports = function(grunt) {
 
     buildconfig: {
       options: {
-        src: 'test/fixtures/config.js',
-        dest: '.tmp/config.js',
+        srcFile: 'test/fixtures/config.js',
+        destFile: '.tmp/config.js',
         varName: '__CONFIG__',
       }
     },

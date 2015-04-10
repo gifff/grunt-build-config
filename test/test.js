@@ -17,10 +17,10 @@ describe('buildconfig', function () {
     var root = __dirname + '/../';
 
     var options = grunt.config.get('buildconfig').options;
-    var expected = require(root + options.src);
+    var expected = require(root + options.srcFile);
     
     global.window = {};
-    require(root + options.dest);
+    require(root + options.destFile);
 
     expect(global.window.__CONFIG__).to.deep.equal(expected[BUILD_ENV]);
   });

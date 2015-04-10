@@ -18,16 +18,16 @@ module.exports = function(grunt) {
       }
 
       var options = this.options({
-        src: 'buildconfig',
-        dest: 'out/buildconfig.js',
+        srcFile: 'buildconfig',
+        destFile: 'out/buildconfig.js',
         varName: '__BUILD_CONFIG__',
       });
 
       var configTable = null;
       try {
-        configTable = require(path.resolve(options.src));
+        configTable = require(path.resolve(options.srcFile));
       } catch(e) {
-        grunt.fail.warn(format('Cannot find source \'%s\'', options.src));
+        grunt.fail.warn(format('Cannot find source \'%s\'', options.srcFile));
         return false;
       }
 
@@ -46,10 +46,10 @@ module.exports = function(grunt) {
         config: indentString(JSON.stringify(config, undefined, 2), ' ', 2)
       });
 
-      mkdirp.sync(path.dirname(options.dest));
-      fs.writeFileSync(options.dest, configFile);
+      mkdirp.sync(path.dirname(options.destFile));
+      fs.writeFileSync(options.destFile, configFile);
 
-      grunt.log.ok('Config file generated: %s', options.dest);
+      grunt.log.ok('Config file generated: %s', options.destFile);
 
       return true;
     });
