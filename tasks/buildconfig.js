@@ -2,6 +2,7 @@
 
 var fs = require('fs'),
     path = require('path'),
+    format = require('util').format,
     _ = require('lodash'),
     mkdirp = require('mkdirp'),
     indentString = require('indent-string');
@@ -13,6 +14,7 @@ module.exports = function(grunt) {
 
       if (!target) {
         grunt.fail.warn('target must be given');
+        return false;
       }
 
       var options = this.options({
@@ -21,9 +23,19 @@ module.exports = function(grunt) {
         varName: '__BUILD_CONFIG__',
       });
 
-      var config = require(path.resolve(options.src))[target];
+      var configTable = null;
+      try {
+        configTable = require(path.resolve(options.src));
+      } catch(e) {
+        grunt.fail.warn(format('Cannot find source \'%s\'', options.src));
+        return false;
+      }
+
+      var config = configTable[target];
       if (!config) {
-        grunt.fail.warn('invalid target: ' + target);
+        grunt.log.warn('Cannot find config with target \'%s\'', target)
+        grunt.log.warn('Available targets: [%s]', Object.keys(configTable).join(', '));
+        grunt.fail.warn(format('Invalid target: %s', target));
       }
 
       var template = fs.readFileSync(__dirname + '/config.template');
@@ -37,6 +49,9 @@ module.exports = function(grunt) {
       mkdirp.sync(path.dirname(options.dest));
       fs.writeFileSync(options.dest, configFile);
 
+      grunt.log.ok('Config file generated: %s', options.dest);
+
+      return true;
     });
 
 };
