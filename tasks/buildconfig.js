@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       var config = configTable[target];
       if (!config) {
         grunt.log.warn('Cannot find config with target \'%s\'', target);
-        grunt.log.warn('Available targets: [%s]', 
+        grunt.log.warn('Available targets: [%s]',
           Object.keys(configTable).join(', '));
         grunt.fail.warn(format('Invalid target: %s', target));
       }
