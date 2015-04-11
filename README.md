@@ -36,9 +36,9 @@ $ grunt buildconfig:development
   then a file which will run on browsers is generated.
     
 ```js
-'use strict';
-
 ;(function () {
+
+  'use strict';
 
   /* jshint ignore:start */
 
