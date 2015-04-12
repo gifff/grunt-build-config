@@ -1,12 +1,11 @@
+/* jshint ignore:start */
 ;(function () {
 
   'use strict';
 
-  /* jshint ignore:start */
-
   window.<%= varName %> =
 <%= config %>;
 
-  /* jshint ignore:end */
-
 })();
+/* jshint ignore:end */
+

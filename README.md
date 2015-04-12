@@ -36,11 +36,10 @@ $ grunt buildconfig:development
   then a file which will run on browsers is generated.
     
 ```js
+/* jshint ignore:start */
 ;(function () {
 
   'use strict';
-
-  /* jshint ignore:start */
 
   window.__BUILD_CONFIG__ =
   {
@@ -48,9 +47,8 @@ $ grunt buildconfig:development
     "env": "development"
   };
 
-  /* jshint ignore:end */
-
 })();
+/* jshint ignore:end */
 ```
 
   
