@@ -9,14 +9,9 @@ var fs = require('fs'),
 
 module.exports = function(grunt) {
 
-  grunt.registerTask('buildconfig', 
+  grunt.registerTask('buildconfig',
     'Make config file for browser at build time',
     function (target) {
-
-      if (!target) {
-        grunt.fail.warn('target must be given');
-        return false;
-      }
 
       var options = this.options({
         srcFile: 'buildconfig',
@@ -32,19 +27,30 @@ module.exports = function(grunt) {
         return false;
       }
 
+      function exitWithTargetError () {
+        grunt.log.warn('Available targets: [%s]',
+          Object.keys(configTable).join(', '));
+        grunt.fail.warn(format('Invalid target: %s', target || '(undefined)'));
+
+        return false;
+      }
+
+      if (!target) {
+        grunt.log.warn('target must be given');
+        return exitWithTargetError();
+      }
+
       var config = configTable[target];
       if (!config) {
         grunt.log.warn('Cannot find config with target \'%s\'', target);
-        grunt.log.warn('Available targets: [%s]',
-          Object.keys(configTable).join(', '));
-        grunt.fail.warn(format('Invalid target: %s', target));
+        return exitWithTargetError();
       }
 
       var template = fs.readFileSync(__dirname + '/config.template');
       var compiled = _.template(template.toString());
 
       var configFile = compiled({
-        varName: options.varName, 
+        varName: options.varName,
         config: indentString(JSON.stringify(config, undefined, 2), ' ', 2)
       });
 
