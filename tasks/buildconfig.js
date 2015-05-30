@@ -17,6 +17,7 @@ module.exports = function(grunt) {
         srcFile: 'buildconfig',
         destFile: 'out/buildconfig.js',
         varName: '__BUILD_CONFIG__',
+        mode: 'default',
       });
 
       var configTable = null;
@@ -46,7 +47,20 @@ module.exports = function(grunt) {
         return exitWithTargetError();
       }
 
-      var template = fs.readFileSync(__dirname + '/config.template');
+      var tmplFile;
+
+      switch(options.mode) {
+        case 'default':
+          tmplFile = 'default.tmpl';
+          break;
+        case 'browserify':
+          tmplFile = 'browserify.tmpl';
+          break;
+        default:
+          grunt.fail.warn(format('Invalid mode: %s', options.mode));
+      }
+
+      var template = fs.readFileSync(__dirname + '/templates/' + tmplFile);
       var compiled = _.template(template.toString());
 
       var configFile = compiled({

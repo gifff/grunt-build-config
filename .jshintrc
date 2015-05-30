@@ -4,11 +4,12 @@
   "eqeqeq": true,
   "indent": 2,
   "latedef": true,
-  "maxlen": 80,
+  "maxlen": 90,
   "newcap": true,
   "quotmark": "single",
   "strict": true,
   "undef": true,
   "unused": true,
-  "eqnull": true
+  "eqnull": true,
+  "esnext": true
 }

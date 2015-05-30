@@ -28,7 +28,7 @@ module.exports = function(grunt) {
     },
 
     // Unit tests.
-    mochaTest: { 
+    mochaTest: {
       test: ['test/test.js']
     }
 
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('test', ['clean', 'buildconfig:development', 'mochaTest']);
+  grunt.registerTask('test', ['clean', 'mochaTest']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['lint', 'test']);
