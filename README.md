@@ -35,6 +35,8 @@ $ grunt buildconfig:development
   
   then a file which will run on browsers is generated.
     
+  `default` mode:
+
 ```js
 /* jshint ignore:start */
 ;(function () {
@@ -51,7 +53,18 @@ $ grunt buildconfig:development
 /* jshint ignore:end */
 ```
 
-  
+  `browserify` mode:
+
+```js
+/* jshint ignore:start */
+'use strict';
+module.exports = {
+  "api_host": "http://localhost:7000",
+  "env": "development"
+};
+/* jshint ignore:end */
+```
+
 ## Installation
 
 ```bash
@@ -90,6 +103,15 @@ Read a configuration table and generate a configuration file with given environm
   
   Name of the global variable which contains the configuration information.
 
+#### mode
+
+  Type: `String`
+  Default: 'default'
+  
+  Form of output js file.  
+  When mode is `default`, config file data is assigned to a global variable.    
+  When mode is `browserify`, config file data will be exported in commonjs way.
+
 ### Usage Examples
 
 ```js
@@ -98,6 +120,7 @@ buildconfig: {
     srcFile: 'test/fixtures/config.js',
     destFile: '.tmp/config.js',
     varName: '__CONFIG__',
+    mode: 'default'
   }
 },
 ```
