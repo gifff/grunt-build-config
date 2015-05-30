@@ -1,10 +1,15 @@
 'use strict';
 
-var expect = require('chai').expect;
+var Q = require('q');
 
-var grunt = require('grunt'),
-    runTask = require('grunt-run-task'),
-    co = require('co');
+var Q = require('q'),
+    chai = require('chai'),
+    chaiAsPromised = require('chai-as-promised'),
+    grunt = require('grunt'),
+    runTask = require('grunt-run-task');
+
+chai.use(chaiAsPromised);
+chai.should();
 
 runTask.loadTasks('tasks');
 
@@ -14,73 +19,57 @@ require('../Gruntfile')(grunt);
 
 describe('buildconfig', function () {
 
-  it('should throw error when mode is invalid', function (done) {
+  function taskPromise(task, config) {
+    return Q.Promise(function (resolve, reject) {
+      runTask.task(task, config).run(function (err) {
+        if (err) { return reject(err); }
+        resolve();
+      });
+    });
+  }
 
-    co(function* () {
+  it('should throw error when mode is invalid', function () {
 
-      var config = grunt.config.get('buildconfig');
-      config.options.mode = 'invalid';
+    var config = grunt.config.get('buildconfig');
+    config.options.mode = 'invalid';
 
-      var err = null;
-      try {
-        yield function (callback) {
-          runTask.task('buildconfig:development', config).run(callback);
-        };
-      } catch(e) {
-        err = e;
-      }
-
-      expect(err).to.equal('Invalid mode: invalid');
-
-    }).then(done, done);
+    return taskPromise('buildconfig:development', config)
+      .should.be.rejectedWith('Invalid mode: invalid');
   });
 
-  it('should generate config file for given env (mode=default)', function (done) {
+  it('should generate config file for given env (mode=default)', function () {
 
-    co(function* () {
+    var root = __dirname + '/../';
+    var destFile = root + '.tmp/config.default.js';
 
-      var root = __dirname + '/../';
-      var destFile = root + '.tmp/config.default.js';
+    var config = grunt.config.get('buildconfig');
+    config.options.destFile = destFile;
 
-      var config = grunt.config.get('buildconfig');
-      config.options.destFile = destFile;
+    var expected = require(root + config.options.srcFile);
 
-      var expected = require(root + config.options.srcFile);
-
-      yield function (callback) {
-        runTask.task('buildconfig:development', config).run(callback);
-      };
-
+    return taskPromise('buildconfig:development', config).then(function () {
       global.window = {};
       require(destFile);
+      global.window.__CONFIG__.should.deep.equal(expected.development);
+    });
 
-      expect(global.window.__CONFIG__).to.deep.equal(expected.development);
-
-    }).then(done, done);
   });
 
-  it('should generate config file for given env (mode=browserify)', function (done) {
+  it('should generate config file for given env (mode=browserify)', function () {
 
-    co(function* () {
+    var root = __dirname + '/../';
+    var destFile = root + '.tmp/config.browserify.js';
 
-      var root = __dirname + '/../';
-      var destFile = root + '.tmp/config.browserify.js';
+    var config = grunt.config.get('buildconfig');
+    config.options.mode = 'browserify';
+    config.options.destFile = destFile;
 
-      var config = grunt.config.get('buildconfig');
-      config.options.mode = 'browserify';
-      config.options.destFile = destFile;
+    var expected = require(root + config.options.srcFile);
 
-      var expected = require(root + config.options.srcFile);
-
-      yield function (callback) {
-        runTask.task('buildconfig:development', config).run(callback);
-      };
-
+    return taskPromise('buildconfig:development', config).then(function () {
       var actual = require(destFile);
-
-      expect(actual).to.deep.equal(expected.development);
-
-    }).then(done, done);
+      actual.should.deep.equal(expected.development);
+    });
   });
 
 });
