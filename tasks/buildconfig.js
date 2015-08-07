@@ -24,7 +24,8 @@ module.exports = function(grunt) {
       try {
         configTable = require(path.resolve(options.srcFile));
       } catch(e) {
-        grunt.fail.warn(format('Cannot find source \'%s\'', options.srcFile));
+        grunt.fail.warn(format('Cannot require source \'%s\'', options.srcFile));
+        grunt.fail.warn(e.stack);
         return false;
       }
 

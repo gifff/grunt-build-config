@@ -1,6 +1,6 @@
 {
   "name": "grunt-build-config",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Make config file for broswer at build time",
   "scripts": {
     "test": "grunt test"
